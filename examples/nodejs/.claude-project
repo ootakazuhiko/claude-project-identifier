@@ -1,0 +1,141 @@
+{
+  "project": {
+    "name": "Express API Server",
+    "description": "RESTful API with Express.js and TypeScript",
+    "version": "2.3.1",
+    "type": "Node.js REST API",
+    "status": "Active Development",
+    "repository": "https://github.com/example/express-api-server",
+    "author": "API Team",
+    "license": "MIT"
+  },
+  "display": {
+    "banner": [
+      "╔══════════════════════════════════════════════════════╗",
+      "║            🚀 Express API Server v2.3.1              ║",
+      "║        RESTful API with Express & TypeScript         ║",
+      "╚══════════════════════════════════════════════════════╝"
+    ],
+    "banner_ascii": [
+      "========================================================",
+      "          Express API Server v2.3.1                     ",
+      "      RESTful API with Express & TypeScript             ",
+      "========================================================"
+    ],
+    "waiting_indicators": [
+      "[WAITING] 🚀 Ready to handle API requests...",
+      "[WAITING] 📡 API server standing by...",
+      "[WAITING] 💻 What endpoint shall we build today?",
+      "[WAITING] 🔧 Ready to improve the API...",
+      "[WAITING] ⚡ Waiting for your next command..."
+    ],
+    "info": {
+      "show_git_branch": true,
+      "show_environment": true,
+      "show_timestamp": true,
+      "show_tech_stack": true,
+      "show_last_commit": true,
+      "show_todo_count": true,
+      "show_node_version": true,
+      "show_npm_version": true
+    },
+    "colors": {
+      "banner": "cyan",
+      "project_name": "green",
+      "section_header": "blue",
+      "waiting": "yellow",
+      "info": "white"
+    }
+  },
+  "environments": {
+    "development": {
+      "color": "green",
+      "emoji": "🚀",
+      "label": "DEV",
+      "api_url": "http://localhost:3000"
+    },
+    "staging": {
+      "color": "yellow",
+      "emoji": "🔧",
+      "label": "STAGE",
+      "api_url": "https://staging-api.example.com"
+    },
+    "production": {
+      "color": "red",
+      "emoji": "🏭",
+      "label": "PROD",
+      "api_url": "https://api.example.com",
+      "show_warning": true
+    }
+  },
+  "tech_stack": {
+    "runtime": "Node.js 18 LTS",
+    "framework": "Express.js 4.18",
+    "language": "TypeScript 5.0",
+    "database": "PostgreSQL 15",
+    "orm": "Prisma 5.0",
+    "authentication": "JWT (jsonwebtoken)",
+    "testing": "Jest + Supertest",
+    "tools": [
+      "ESLint",
+      "Prettier",
+      "Nodemon",
+      "Docker",
+      "Swagger"
+    ]
+  },
+  "quick_commands": [
+    {
+      "name": "dev",
+      "command": "npm run dev",
+      "description": "Start development server with hot reload"
+    },
+    {
+      "name": "test",
+      "command": "npm test",
+      "description": "Run all tests"
+    },
+    {
+      "name": "test:watch",
+      "command": "npm run test:watch",
+      "description": "Run tests in watch mode"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "description": "Run ESLint"
+    },
+    {
+      "name": "format",
+      "command": "npm run format",
+      "description": "Format code with Prettier"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "description": "Build TypeScript to JavaScript"
+    },
+    {
+      "name": "db:migrate",
+      "command": "npm run db:migrate",
+      "description": "Run database migrations"
+    },
+    {
+      "name": "db:seed",
+      "command": "npm run db:seed",
+      "description": "Seed database with test data"
+    }
+  ],
+  "badges": {
+    "version": true,
+    "build_status": true,
+    "coverage": true,
+    "license": true
+  },
+  "api_info": {
+    "base_path": "/api/v1",
+    "documentation": "/api-docs",
+    "health_check": "/health",
+    "metrics": "/metrics"
+  }
+}

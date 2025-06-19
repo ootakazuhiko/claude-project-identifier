@@ -1,0 +1,28 @@
+# Claude Project Information Display
+# Add this section to your existing Makefile
+
+.PHONY: info project-info help-claude
+
+# Default target to show project info
+info: project-info
+
+# Display project information
+project-info:
+	@bash init-project.sh
+
+# Show Claude-specific help
+help-claude:
+	@echo "Claude Code Project Commands:"
+	@echo "  make info          - Display project information with waiting indicator"
+	@echo "  make project-info  - Same as 'make info'"
+	@echo "  make help-claude   - Show this help message"
+	@echo ""
+	@echo "The project info will automatically show:"
+	@echo "  - Waiting indicator when idle"
+	@echo "  - Project name and description"
+	@echo "  - Current environment status"
+	@echo "  - Available commands"
+	@echo ""
+
+# Optional: Add to your existing help target
+help:: help-claude

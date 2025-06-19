@@ -1,0 +1,153 @@
+{
+  "project": {
+    "name": "ML Data Analyzer",
+    "description": "Machine Learning toolkit for automated data analysis",
+    "version": "1.5.0",
+    "type": "Python Data Science Tool",
+    "status": "Beta",
+    "repository": "https://github.com/example/ml-data-analyzer",
+    "author": "Data Science Team",
+    "license": "Apache-2.0"
+  },
+  "display": {
+    "banner": [
+      "╔══════════════════════════════════════════════════════╗",
+      "║          📊 ML Data Analyzer v1.5.0 📊               ║",
+      "║      Machine Learning Analysis Toolkit (Beta)         ║",
+      "╚══════════════════════════════════════════════════════╝"
+    ],
+    "banner_ascii": [
+      "========================================================",
+      "         ML Data Analyzer v1.5.0 (Beta)                ",
+      "     Machine Learning Analysis Toolkit                  ",
+      "========================================================"
+    ],
+    "waiting_indicators": [
+      "[WAITING] 📊 Ready to analyze your data...",
+      "[WAITING] 🤖 ML models standing by...",
+      "[WAITING] 🔬 What shall we discover today?",
+      "[WAITING] 📈 Awaiting data science tasks...",
+      "[WAITING] 🧮 Ready for computational work..."
+    ],
+    "info": {
+      "show_git_branch": true,
+      "show_environment": true,
+      "show_timestamp": true,
+      "show_tech_stack": true,
+      "show_last_commit": true,
+      "show_todo_count": true,
+      "show_python_version": true,
+      "show_venv_status": true
+    },
+    "colors": {
+      "banner": "magenta",
+      "project_name": "cyan",
+      "section_header": "green",
+      "waiting": "yellow",
+      "info": "blue"
+    }
+  },
+  "environments": {
+    "development": {
+      "color": "green",
+      "emoji": "🚀",
+      "label": "DEV"
+    },
+    "research": {
+      "color": "blue",
+      "emoji": "🔬",
+      "label": "RESEARCH"
+    },
+    "production": {
+      "color": "red",
+      "emoji": "🏭",
+      "label": "PROD",
+      "show_warning": true,
+      "warning_message": "⚠️  Production environment - Be careful with data operations!"
+    }
+  },
+  "tech_stack": {
+    "language": "Python 3.11",
+    "framework": "FastAPI",
+    "ml_libraries": [
+      "scikit-learn",
+      "TensorFlow",
+      "PyTorch",
+      "XGBoost",
+      "LightGBM"
+    ],
+    "data_libraries": [
+      "pandas",
+      "numpy",
+      "polars"
+    ],
+    "visualization": [
+      "matplotlib",
+      "seaborn",
+      "plotly",
+      "altair"
+    ],
+    "tools": [
+      "Jupyter",
+      "pytest",
+      "Black",
+      "mypy",
+      "Poetry",
+      "Docker"
+    ]
+  },
+  "quick_commands": [
+    {
+      "name": "notebook",
+      "command": "jupyter notebook",
+      "description": "Start Jupyter notebook server"
+    },
+    {
+      "name": "api",
+      "command": "uvicorn src.api.main:app --reload",
+      "description": "Start FastAPI development server"
+    },
+    {
+      "name": "test",
+      "command": "pytest -v",
+      "description": "Run all tests with verbose output"
+    },
+    {
+      "name": "coverage",
+      "command": "pytest --cov=src --cov-report=html",
+      "description": "Run tests with coverage report"
+    },
+    {
+      "name": "format",
+      "command": "black . && isort .",
+      "description": "Format code with Black and isort"
+    },
+    {
+      "name": "lint",
+      "command": "flake8 src tests && mypy src",
+      "description": "Run linting and type checking"
+    },
+    {
+      "name": "train",
+      "command": "python -m src.train",
+      "description": "Train ML models"
+    },
+    {
+      "name": "analyze",
+      "command": "python -m src.analyze",
+      "description": "Run automated EDA"
+    }
+  ],
+  "data_info": {
+    "supported_formats": ["CSV", "Excel", "Parquet", "JSON", "HDF5"],
+    "max_file_size": "2GB",
+    "data_directory": "./data",
+    "output_directory": "./output"
+  },
+  "ml_config": {
+    "random_seed": 42,
+    "cv_folds": 5,
+    "test_size": 0.2,
+    "metrics": ["accuracy", "precision", "recall", "f1", "auc"]
+  }
+}

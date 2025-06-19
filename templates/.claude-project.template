@@ -1,0 +1,107 @@
+{
+  "project": {
+    "name": "[PROJECT_NAME]",
+    "description": "[PROJECT_DESCRIPTION]",
+    "version": "1.0.0",
+    "type": "[PROJECT_TYPE]",
+    "status": "Active Development",
+    "repository": "[REPOSITORY_URL]",
+    "author": "[AUTHOR_NAME]",
+    "license": "[LICENSE_TYPE]"
+  },
+  "display": {
+    "banner": [
+      "╔══════════════════════════════════════════════╗",
+      "║            [PROJECT_NAME]                    ║",
+      "║         [PROJECT_TAGLINE]                    ║",
+      "╚══════════════════════════════════════════════╝"
+    ],
+    "banner_ascii": [
+      "==================================================",
+      "              [PROJECT_NAME]                      ",
+      "           [PROJECT_TAGLINE]                      ",
+      "=================================================="
+    ],
+    "waiting_indicators": [
+      "[WAITING] 👁️  Ready for your command...",
+      "[WAITING] 🤖 Awaiting instructions...",
+      "[WAITING] 💭 What would you like to do?",
+      "[WAITING] ⏳ Standing by...",
+      "[WAITING] 🎯 Ready to assist..."
+    ],
+    "info": {
+      "show_git_branch": true,
+      "show_environment": true,
+      "show_timestamp": true,
+      "show_tech_stack": true,
+      "show_last_commit": true,
+      "show_todo_count": true
+    },
+    "colors": {
+      "banner": "cyan",
+      "project_name": "purple",
+      "section_header": "green",
+      "waiting": "yellow",
+      "info": "blue"
+    }
+  },
+  "environments": {
+    "development": {
+      "color": "green",
+      "emoji": "🚀",
+      "label": "DEV"
+    },
+    "staging": {
+      "color": "yellow",
+      "emoji": "🔧",
+      "label": "STAGE"
+    },
+    "production": {
+      "color": "red",
+      "emoji": "🏭",
+      "label": "PROD"
+    },
+    "test": {
+      "color": "blue",
+      "emoji": "🧪",
+      "label": "TEST"
+    }
+  },
+  "tech_stack": {
+    "language": "[PRIMARY_LANGUAGE]",
+    "framework": "[FRAMEWORK]",
+    "database": "[DATABASE]",
+    "tools": [
+      "[TOOL_1]",
+      "[TOOL_2]"
+    ]
+  },
+  "quick_commands": [
+    {
+      "name": "info",
+      "command": "make info",
+      "description": "Show project information"
+    },
+    {
+      "name": "start",
+      "command": "[START_COMMAND]",
+      "description": "Start development server"
+    },
+    {
+      "name": "test",
+      "command": "[TEST_COMMAND]",
+      "description": "Run tests"
+    },
+    {
+      "name": "build",
+      "command": "[BUILD_COMMAND]",
+      "description": "Build project"
+    }
+  ],
+  "badges": {
+    "version": true,
+    "build_status": true,
+    "coverage": true,
+    "license": true
+  }
+}

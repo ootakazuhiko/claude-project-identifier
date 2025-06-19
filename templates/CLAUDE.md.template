@@ -1,0 +1,91 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Identification
+
+When working with this project, Claude Code should always display the following information at startup and when waiting for user input:
+
+```
+[WAITING] ユーザー入力待機中... / Waiting for user input...
+================================================
+ Project: [PROJECT_NAME]
+ Type: [PROJECT_TYPE]
+ Environment: [ENVIRONMENT]
+ Current Directory: [current path]
+ Time: [current time]
+================================================
+```
+
+Additionally, when idle or waiting for user input, display:
+```
+[WAITING] 👁️ Ready for your command...
+```
+
+## Project Overview
+
+[PROJECT_NAME] is [PROJECT_DESCRIPTION].
+
+## Project Structure
+
+```
+[PROJECT_NAME]/
+├── src/               # Source code
+├── tests/             # Test files
+├── docs/              # Documentation
+└── ...               # Other directories
+```
+
+## Development Commands
+
+### Quick Start
+```bash
+# Install dependencies
+[INSTALL_COMMAND]
+
+# Start development
+[DEV_COMMAND]
+
+# Run tests
+[TEST_COMMAND]
+
+# Build for production
+[BUILD_COMMAND]
+```
+
+## Key Features
+
+- [FEATURE_1]
+- [FEATURE_2]
+- [FEATURE_3]
+
+## Important Notes
+
+- Always show project context when starting work
+- Display waiting indicator when idle
+- Maintain project-specific conventions
+- Follow the coding style guide
+
+## Git Workflow
+
+All commits should follow the pattern:
+```bash
+git commit -m "[AI: Claude Code] Description of changes"
+```
+
+## Environment Variables
+
+```
+[ENV_VAR_1]=value1
+[ENV_VAR_2]=value2
+```
+
+## Tech Stack
+
+- [TECH_1]
+- [TECH_2]
+- [TECH_3]
+
+---
+
+Remember: Always display the project identification banner when starting work on this project, and show the waiting indicator when idle.

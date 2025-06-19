@@ -1,0 +1,26 @@
+name: Test Templates
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Make scripts executable
+      run: chmod +x scripts/*.sh tests/*.sh
+    
+    - name: Validate template syntax
+      run: ./scripts/validate.sh
+    
+    - name: Test setup script
+      run: ./tests/test-setup.sh
+    
+    - name: Test examples
+      run: ./tests/test-examples.sh
