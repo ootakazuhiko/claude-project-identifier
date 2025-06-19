@@ -5,12 +5,19 @@
 # Function to update prompt with project info
 claude_prompt_update() {
     if [ -f ".claude-project" ] && [ -f "CLAUDE.md" ]; then
-        # Extract project name from .claude-project
+        # Extract project information from .claude-project
         PROJECT_NAME=$(grep -o '"name": "[^"]*"' .claude-project 2>/dev/null | head -1 | cut -d'"' -f4)
+        PROJECT_TYPE=$(grep -o '"type": "[^"]*"' .claude-project 2>/dev/null | head -1 | cut -d'"' -f4)
+        PROJECT_VERSION=$(grep -o '"version": "[^"]*"' .claude-project 2>/dev/null | head -1 | cut -d'"' -f4)
         
         if [ -n "$PROJECT_NAME" ]; then
             # Set terminal title (works in many terminal emulators)
             echo -ne "\033]0;Claude Code - $PROJECT_NAME\007"
+            
+            # Export environment variables for use in scripts
+            export CLAUDE_PROJECT_NAME="$PROJECT_NAME"
+            export CLAUDE_PROJECT_TYPE="$PROJECT_TYPE"
+            export CLAUDE_PROJECT_VERSION="$PROJECT_VERSION"
             
             # Update shell prompt
             if [ -n "$BASH_VERSION" ]; then
@@ -21,6 +28,11 @@ claude_prompt_update() {
                 export PROMPT="%F{cyan}[$PROJECT_NAME]%f %~ $ "
             fi
         fi
+    else
+        # Clear environment variables if no Claude project found
+        unset CLAUDE_PROJECT_NAME
+        unset CLAUDE_PROJECT_TYPE
+        unset CLAUDE_PROJECT_VERSION
     fi
 }
 
