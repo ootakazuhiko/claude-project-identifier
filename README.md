@@ -19,45 +19,66 @@ A project identification and context display system for Claude Code (claude.ai/c
 
 ### Step 1: Install Claude Project Identifier
 
+**One-line installation (recommended):**
 ```bash
-# One-line installation (recommended)
 curl -sSL https://raw.githubusercontent.com/ootakazuhiko/claude-project-identifier/main/scripts/install.sh | bash
+```
 
-# Or with wget
+**Or with wget:**
+```bash
 wget -qO- https://raw.githubusercontent.com/ootakazuhiko/claude-project-identifier/main/scripts/install.sh | bash
+```
 
-# Or manual installation
+**Or manual installation:**
+```bash
 git clone https://github.com/ootakazuhiko/claude-project-identifier.git
+```
+```bash
 cd claude-project-identifier
+```
+```bash
 ./scripts/setup.sh
 ```
 
 ### Step 2: Set Up Your Project
 
-Navigate to your project directory and run the setup:
-
+Navigate to your project directory:
 ```bash
 cd /path/to/your/project
-
-# Option 1: Interactive setup (recommended)
-claude-project-setup
-# Follow the prompts to configure your project
-
-# Option 2: Manual setup
-cp ~/.claude-project-identifier/templates/CLAUDE.md.template ./CLAUDE.md
-cp ~/.claude-project-identifier/templates/.claude-project.template ./.claude-project
-cp ~/.claude-project-identifier/templates/init-project.sh.template ./init-project.sh
-chmod +x init-project.sh
-# Then edit the files to match your project
 ```
+
+**Option 1: Interactive setup (recommended)**
+```bash
+claude-project-setup
+```
+
+**Option 2: Manual setup**
+
+Copy template files:
+```bash
+cp ~/.claude-project-identifier/templates/CLAUDE.md.template ./CLAUDE.md
+```
+```bash
+cp ~/.claude-project-identifier/templates/.claude-project.template ./.claude-project
+```
+```bash
+cp ~/.claude-project-identifier/templates/init-project.sh.template ./init-project.sh
+```
+```bash
+chmod +x init-project.sh
+```
+
+Then edit the files to match your project.
 
 ### Step 3: Test Your Setup
 
+**If you have a Makefile:**
 ```bash
-# If you have a Makefile
 make info
+```
 
-# Or run directly
+**Or run directly:**
+```bash
 ./init-project.sh
 ```
 
@@ -101,7 +122,9 @@ Ready to start working on My Awesome Project!
 2. **Apply to your project**
    ```bash
    cd /path/to/your/project
-   claude-project-setup  # Interactive setup
+   ```
+   ```bash
+   claude-project-setup
    ```
 
 3. **Customize** (edit the generated files)
@@ -111,31 +134,42 @@ Ready to start working on My Awesome Project!
 
 4. **Test**
    ```bash
-   make info  # or ./init-project.sh
+   make info
+   ```
+   Or:
+   ```bash
+   ./init-project.sh
    ```
 
 ## 🔄 Update & Uninstall
 
 ### Update to Latest Version
 
+**Automatic update:**
 ```bash
-# Automatic update
-~/.claude-project-identifier/scripts/update.sh
+claude-project-update
+```
 
-# Or pull latest changes
-cd ~/.claude-project-identifier && git pull
+**Or manual update:**
+```bash
+cd ~/.claude-project-identifier
+```
+```bash
+git pull
 ```
 
 ### Uninstall
 
+**Complete uninstall:**
 ```bash
-# Complete uninstall
-~/.claude-project-identifier/scripts/uninstall.sh
-
-# Or manual removal
-rm -rf ~/.claude-project-identifier
-# Then remove PATH entries from ~/.bashrc or ~/.zshrc
+claude-project-uninstall
 ```
+
+**Or manual removal:**
+```bash
+rm -rf ~/.claude-project-identifier
+```
+Then remove PATH entries from `~/.bashrc` or `~/.zshrc`
 
 ## 📖 Documentation
 
