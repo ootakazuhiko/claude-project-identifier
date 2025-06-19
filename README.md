@@ -17,24 +17,51 @@ A project identification and context display system for Claude Code (claude.ai/c
 
 ## 🚀 Quick Start
 
-### One-line Installation
+### Step 1: Install Claude Project Identifier
 
 ```bash
+# One-line installation (recommended)
 curl -sSL https://raw.githubusercontent.com/ootakazuhiko/claude-project-identifier/main/scripts/install.sh | bash
-```
 
-Or with wget:
-```bash
+# Or with wget
 wget -qO- https://raw.githubusercontent.com/ootakazuhiko/claude-project-identifier/main/scripts/install.sh | bash
-```
 
-### Manual Installation
-
-```bash
+# Or manual installation
 git clone https://github.com/ootakazuhiko/claude-project-identifier.git
 cd claude-project-identifier
 ./scripts/setup.sh
 ```
+
+### Step 2: Set Up Your Project
+
+Navigate to your project directory and run the setup:
+
+```bash
+cd /path/to/your/project
+
+# Option 1: Interactive setup (recommended)
+claude-project-setup
+# Follow the prompts to configure your project
+
+# Option 2: Manual setup
+cp ~/.claude-project-identifier/templates/CLAUDE.md.template ./CLAUDE.md
+cp ~/.claude-project-identifier/templates/.claude-project.template ./.claude-project
+cp ~/.claude-project-identifier/templates/init-project.sh.template ./init-project.sh
+chmod +x init-project.sh
+# Then edit the files to match your project
+```
+
+### Step 3: Test Your Setup
+
+```bash
+# If you have a Makefile
+make info
+
+# Or run directly
+./init-project.sh
+```
+
+You should see your project information displayed with a waiting indicator!
 
 ## 📸 What It Looks Like
 
@@ -64,6 +91,29 @@ When you start Claude Code in a configured project:
 Ready to start working on My Awesome Project!
 ```
 
+## 📋 Setup Steps Summary
+
+1. **Install the tool** (one-time setup)
+   ```bash
+   curl -sSL https://raw.githubusercontent.com/ootakazuhiko/claude-project-identifier/main/scripts/install.sh | bash
+   ```
+
+2. **Apply to your project**
+   ```bash
+   cd /path/to/your/project
+   claude-project-setup  # Interactive setup
+   ```
+
+3. **Customize** (edit the generated files)
+   - `CLAUDE.md` - Project instructions for Claude Code
+   - `.claude-project` - Project configuration
+   - `init-project.sh` - Display script
+
+4. **Test**
+   ```bash
+   make info  # or ./init-project.sh
+   ```
+
 ## 📖 Documentation
 
 - [Setup Guide](docs/setup-guide.md) - Detailed installation instructions
@@ -73,10 +123,21 @@ Ready to start working on My Awesome Project!
 
 ## 🛠️ Configuration
 
-The system uses two main files:
+The system requires three files in your project root:
 
 1. **CLAUDE.md** - Instructions for Claude Code
+   - Tells Claude Code how to display project information
+   - Contains project overview and development commands
+
 2. **.claude-project** - Project configuration (JSON)
+   - Defines project metadata (name, version, type)
+   - Customizes banners, colors, and waiting messages
+   - Configures what information to display
+
+3. **init-project.sh** - Display script
+   - Bash script that renders the project information
+   - Reads configuration from `.claude-project`
+   - Can be called via `make info` or directly
 
 Example `.claude-project`:
 ```json
