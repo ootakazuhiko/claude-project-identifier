@@ -103,6 +103,12 @@ sed -e "s/\[PROJECT_NAME\]/$PROJECT_NAME_ESCAPED/g" \
 cp "$TEMPLATE_DIR/init-project.sh.template" "$TARGET_DIR/init-project.sh"
 chmod +x "$TARGET_DIR/init-project.sh"
 
+# Copy claude-prompt.sh for terminal integration
+if [ -f "$TEMPLATE_DIR/claude-prompt.sh.template" ]; then
+    cp "$TEMPLATE_DIR/claude-prompt.sh.template" "$TARGET_DIR/.claude-prompt.sh"
+    chmod +x "$TARGET_DIR/.claude-prompt.sh"
+fi
+
 # Check if Makefile exists
 if [ -f "$TARGET_DIR/Makefile" ]; then
     echo -e "${YELLOW}Makefile already exists. Add Claude commands? (y/n)${NC}"
@@ -163,15 +169,37 @@ echo -e "${CYAN}Files created in $TARGET_DIR:${NC}"
 echo "  ✓ CLAUDE.md"
 echo "  ✓ .claude-project"
 echo "  ✓ init-project.sh"
+echo "  ✓ .claude-prompt.sh"
 echo "  ✓ CLAUDE_QUICK_REFERENCE.md"
 if [ -f "$TARGET_DIR/Makefile" ]; then
     echo "  ✓ Makefile (updated)"
 fi
 
 echo ""
-echo -e "${YELLOW}Next steps:${NC}"
-echo "1. cd $TARGET_DIR"
-echo "2. make info  (or bash init-project.sh)"
-echo "3. Start using Claude Code!"
+echo -e "${YELLOW}${BOLD}🎯 Terminal Title Bar Integration:${NC}"
+echo ""
+echo -e "${CYAN}To show project name in your terminal title bar:${NC}"
+echo ""
+echo "1. Copy the prompt integration to your home directory:"
+echo -e "   ${GREEN}cp $TARGET_DIR/.claude-prompt.sh ~/.claude-prompt.sh${NC}"
+echo ""
+echo "2. Add to your shell configuration:"
+if [ -n "$BASH_VERSION" ]; then
+    echo -e "   ${GREEN}echo 'source ~/.claude-prompt.sh' >> ~/.bashrc${NC}"
+elif [ -n "$ZSH_VERSION" ]; then
+    echo -e "   ${GREEN}echo 'source ~/.claude-prompt.sh' >> ~/.zshrc${NC}"
+else
+    echo -e "   ${GREEN}Add 'source ~/.claude-prompt.sh' to your shell config${NC}"
+fi
+echo ""
+echo "3. Reload your shell:"
+echo -e "   ${GREEN}source ~/.bashrc${NC}  # or source ~/.zshrc"
+echo ""
+echo -e "${PURPLE}Result: Your terminal will show:${NC}"
+echo -e "   Terminal title: ${BOLD}Claude Code - $PROJECT_NAME${NC}"
+echo -e "   Prompt: ${CYAN}[$PROJECT_NAME]${NC} ~/path/to/project $"
+echo ""
+echo -e "${YELLOW}Manual display:${NC}"
+echo "  cd $TARGET_DIR && ./init-project.sh"
 echo ""
 echo -e "${GREEN}Happy coding with Claude Code! 🚀${NC}"

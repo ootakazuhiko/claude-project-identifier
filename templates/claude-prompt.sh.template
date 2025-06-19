@@ -1,0 +1,38 @@
+#!/bin/bash
+# Claude Project Prompt Integration
+# This file should be sourced in your shell configuration
+
+# Function to update prompt with project info
+claude_prompt_update() {
+    if [ -f ".claude-project" ] && [ -f "CLAUDE.md" ]; then
+        # Extract project name from .claude-project
+        PROJECT_NAME=$(grep -o '"name": "[^"]*"' .claude-project 2>/dev/null | head -1 | cut -d'"' -f4)
+        
+        if [ -n "$PROJECT_NAME" ]; then
+            # Set terminal title (works in many terminal emulators)
+            echo -ne "\033]0;Claude Code - $PROJECT_NAME\007"
+            
+            # Update shell prompt
+            if [ -n "$BASH_VERSION" ]; then
+                # Bash prompt with project name
+                export PS1="\[\033[0;36m\][$PROJECT_NAME]\[\033[0m\] \w $ "
+            elif [ -n "$ZSH_VERSION" ]; then
+                # Zsh prompt with project name
+                export PROMPT="%F{cyan}[$PROJECT_NAME]%f %~ $ "
+            fi
+        fi
+    fi
+}
+
+# Hook into directory changes
+if [ -n "$BASH_VERSION" ]; then
+    # Bash: Use PROMPT_COMMAND
+    PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND; }claude_prompt_update"
+elif [ -n "$ZSH_VERSION" ]; then
+    # Zsh: Use chpwd hook
+    autoload -U add-zsh-hook
+    add-zsh-hook chpwd claude_prompt_update
+fi
+
+# Initial update
+claude_prompt_update

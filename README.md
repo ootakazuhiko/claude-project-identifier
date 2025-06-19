@@ -10,6 +10,7 @@ A project identification and context display system for Claude Code (claude.ai/c
 
 - 🎯 **Automatic Project Identification** - Display project info when Claude Code starts
 - 👁️ **Waiting Status Indicator** - Clear visual feedback when waiting for user input
+- 🪟 **Terminal Title Bar Integration** - Shows project name in terminal window title
 - 🎨 **Customizable Banners** - ASCII and Unicode banner options
 - 🚀 **Quick Setup** - Get running in under 3 minutes
 - 🌍 **Multi-language Support** - Works with any programming language
@@ -83,6 +84,42 @@ make info
 ```
 
 You should see your project information displayed with a waiting indicator!
+
+## 🊟 Terminal Title Bar Integration
+
+To display the project name in your terminal's title bar:
+
+### Automatic Setup (during project setup)
+The setup process will guide you through enabling terminal title integration.
+
+### Manual Setup
+1. **Copy the prompt integration script:**
+   ```bash
+   cp .claude-prompt.sh ~/.claude-prompt.sh
+   ```
+
+2. **Add to your shell configuration:**
+   
+   For Bash:
+   ```bash
+   echo 'source ~/.claude-prompt.sh' >> ~/.bashrc
+   ```
+   
+   For Zsh:
+   ```bash
+   echo 'source ~/.claude-prompt.sh' >> ~/.zshrc
+   ```
+
+3. **Reload your shell:**
+   ```bash
+   source ~/.bashrc  # or ~/.zshrc
+   ```
+
+### Result
+- **Terminal title bar**: `Claude Code - Your Project Name`
+- **Command prompt**: `[Your Project Name] ~/path/to/project $ `
+
+The project name will automatically update when you navigate between different Claude-enabled projects!
 
 ## 📸 What It Looks Like
 

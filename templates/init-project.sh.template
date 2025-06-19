@@ -152,17 +152,47 @@ show_project_info() {
     echo ""
 }
 
+# プロンプトを設定する関数
+setup_prompt() {
+    # プロジェクト設定を読み込む
+    load_project_config
+    
+    # プロンプトをカスタマイズ（bashとzshの両方に対応）
+    if [ -n "$BASH_VERSION" ]; then
+        # Bash用のプロンプト
+        export PS1="\[\033[0;36m\][${PROJECT_NAME}]\[\033[0m\] \w $ "
+    elif [ -n "$ZSH_VERSION" ]; then
+        # Zsh用のプロンプト
+        export PROMPT="%F{cyan}[${PROJECT_NAME}]%f %~ $ "
+    fi
+    
+    # 環境変数を設定
+    export CLAUDE_PROJECT_NAME="${PROJECT_NAME}"
+    export CLAUDE_PROJECT_TYPE="${PROJECT_TYPE}"
+    export CLAUDE_PROJECT_VERSION="${PROJECT_VERSION}"
+}
+
 # メイン処理
 main() {
     # プロジェクト設定を読み込む
     load_project_config
     
-    # プロジェクト情報を表示
-    show_project_info
-    
-    # 環境変数を設定（オプション）
-    export CLAUDE_PROJECT_NAME="${PROJECT_NAME}"
-    export CLAUDE_PROJECT_TYPE="${PROJECT_TYPE}"
+    # コマンドライン引数をチェック
+    case "${1:-}" in
+        "--prompt")
+            # プロンプト設定のみ（静かに実行）
+            setup_prompt
+            ;;
+        "--info")
+            # 情報表示のみ
+            show_project_info
+            ;;
+        *)
+            # デフォルト：情報表示とプロンプト設定
+            show_project_info
+            setup_prompt
+            ;;
+    esac
 }
 
 # プロジェクトルートの確認
