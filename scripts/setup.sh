@@ -19,9 +19,14 @@ echo -e "${CYAN}${BOLD}Claude Code Project Setup${NC}"
 echo -e "${CYAN}=========================${NC}"
 echo ""
 
-# Check if we're in the template directory
-if [ ! -f "CLAUDE.md.template" ]; then
-    echo -e "${RED}Error: This script must be run from the claude-project-template directory${NC}"
+# Find the script's directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+TEMPLATE_DIR="$SCRIPT_DIR/../templates"
+
+# Check if template files exist
+if [ ! -f "$TEMPLATE_DIR/CLAUDE.md.template" ]; then
+    echo -e "${RED}Error: Template files not found in $TEMPLATE_DIR${NC}"
+    echo "Please ensure claude-project-identifier is properly installed."
     exit 1
 fi
 
@@ -40,9 +45,23 @@ read -p "Your Name: " AUTHOR_NAME
 read -p "License [MIT]: " LICENSE
 LICENSE=${LICENSE:-MIT}
 
-# Get target directory
+# Escape special characters for sed
+escape_for_sed() {
+    echo "$1" | sed 's/[[\.*^$()+?{|]/\\&/g'
+}
+
+PROJECT_NAME_ESCAPED=$(escape_for_sed "$PROJECT_NAME")
+PROJECT_TYPE_ESCAPED=$(escape_for_sed "$PROJECT_TYPE")
+PROJECT_DESC_ESCAPED=$(escape_for_sed "$PROJECT_DESC")
+AUTHOR_NAME_ESCAPED=$(escape_for_sed "$AUTHOR_NAME")
+PRIMARY_LANG_ESCAPED=$(escape_for_sed "$PRIMARY_LANG")
+FRAMEWORK_ESCAPED=$(escape_for_sed "$FRAMEWORK")
+
+# Get target directory (default to current directory)
 echo ""
-read -p "Target project directory (absolute path): " TARGET_DIR
+CURRENT_DIR=$(pwd)
+read -p "Target project directory [$CURRENT_DIR]: " TARGET_DIR
+TARGET_DIR=${TARGET_DIR:-$CURRENT_DIR}
 
 # Validate target directory
 if [ ! -d "$TARGET_DIR" ]; then
@@ -62,26 +81,26 @@ echo ""
 echo -e "${BLUE}Setting up Claude Code project files...${NC}"
 
 # Process CLAUDE.md
-sed -e "s/\[PROJECT_NAME\]/$PROJECT_NAME/g" \
-    -e "s/\[PROJECT_TYPE\]/$PROJECT_TYPE/g" \
-    -e "s/\[PROJECT_DESCRIPTION\]/$PROJECT_DESC/g" \
+sed -e "s/\[PROJECT_NAME\]/$PROJECT_NAME_ESCAPED/g" \
+    -e "s/\[PROJECT_TYPE\]/$PROJECT_TYPE_ESCAPED/g" \
+    -e "s/\[PROJECT_DESCRIPTION\]/$PROJECT_DESC_ESCAPED/g" \
     -e "s/\[ENVIRONMENT\]/Development/g" \
-    CLAUDE.md.template > "$TARGET_DIR/CLAUDE.md"
+    "$TEMPLATE_DIR/CLAUDE.md.template" > "$TARGET_DIR/CLAUDE.md"
 
 # Process .claude-project
-sed -e "s/\[PROJECT_NAME\]/$PROJECT_NAME/g" \
-    -e "s/\[PROJECT_TYPE\]/$PROJECT_TYPE/g" \
-    -e "s/\[PROJECT_DESCRIPTION\]/$PROJECT_DESC/g" \
-    -e "s/\[PROJECT_TAGLINE\]/$PROJECT_DESC/g" \
-    -e "s/\[AUTHOR_NAME\]/$AUTHOR_NAME/g" \
+sed -e "s/\[PROJECT_NAME\]/$PROJECT_NAME_ESCAPED/g" \
+    -e "s/\[PROJECT_TYPE\]/$PROJECT_TYPE_ESCAPED/g" \
+    -e "s/\[PROJECT_DESCRIPTION\]/$PROJECT_DESC_ESCAPED/g" \
+    -e "s/\[PROJECT_TAGLINE\]/$PROJECT_DESC_ESCAPED/g" \
+    -e "s/\[AUTHOR_NAME\]/$AUTHOR_NAME_ESCAPED/g" \
     -e "s/\[LICENSE_TYPE\]/$LICENSE/g" \
-    -e "s/\[PRIMARY_LANGUAGE\]/$PRIMARY_LANG/g" \
-    -e "s/\[FRAMEWORK\]/$FRAMEWORK/g" \
+    -e "s/\[PRIMARY_LANGUAGE\]/$PRIMARY_LANG_ESCAPED/g" \
+    -e "s/\[FRAMEWORK\]/$FRAMEWORK_ESCAPED/g" \
     -e "s/\[REPOSITORY_URL\]/https:\/\/github.com\/user\/repo/g" \
-    .claude-project.template > "$TARGET_DIR/.claude-project"
+    "$TEMPLATE_DIR/.claude-project.template" > "$TARGET_DIR/.claude-project"
 
 # Copy init-project.sh
-cp init-project.sh.template "$TARGET_DIR/init-project.sh"
+cp "$TEMPLATE_DIR/init-project.sh.template" "$TARGET_DIR/init-project.sh"
 chmod +x "$TARGET_DIR/init-project.sh"
 
 # Check if Makefile exists
@@ -91,7 +110,7 @@ if [ -f "$TARGET_DIR/Makefile" ]; then
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "" >> "$TARGET_DIR/Makefile"
-        cat Makefile.addon >> "$TARGET_DIR/Makefile"
+        cat "$SCRIPT_DIR/../addons/makefile/Makefile.addon" >> "$TARGET_DIR/Makefile"
         echo -e "${GREEN}✓ Added Claude commands to existing Makefile${NC}"
     fi
 else
@@ -101,7 +120,7 @@ else
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "# $PROJECT_NAME Makefile" > "$TARGET_DIR/Makefile"
         echo "" >> "$TARGET_DIR/Makefile"
-        cat Makefile.addon >> "$TARGET_DIR/Makefile"
+        cat "$SCRIPT_DIR/../addons/makefile/Makefile.addon" >> "$TARGET_DIR/Makefile"
         echo -e "${GREEN}✓ Created new Makefile with Claude commands${NC}"
     fi
 fi
