@@ -56,6 +56,7 @@ fi
 
 # Make scripts executable
 chmod +x "$INSTALL_DIR/scripts"/*.sh
+chmod +x "$INSTALL_DIR/scripts/claude-add" 2>/dev/null || true
 
 # Add to PATH
 SHELL_CONFIG=""
@@ -71,11 +72,15 @@ if [ -n "$SHELL_CONFIG" ]; then
         echo "# Claude Project Identifier" >> "$SHELL_CONFIG"
         echo "export PATH=\"\$PATH:$INSTALL_DIR/scripts\"" >> "$SHELL_CONFIG"
         echo "alias $SCRIPT_NAME='$INSTALL_DIR/scripts/setup.sh'" >> "$SHELL_CONFIG"
+        echo "alias claude-add='$INSTALL_DIR/scripts/add-to-existing.sh'" >> "$SHELL_CONFIG"
         echo "alias claude-project-update='$INSTALL_DIR/scripts/update.sh'" >> "$SHELL_CONFIG"
         echo "alias claude-project-uninstall='$INSTALL_DIR/scripts/uninstall.sh'" >> "$SHELL_CONFIG"
         echo -e "${GREEN}Added to $SHELL_CONFIG${NC}"
     else
         # Update existing aliases in case scripts were added
+        if ! grep -q "claude-add" "$SHELL_CONFIG"; then
+            echo "alias claude-add='$INSTALL_DIR/scripts/add-to-existing.sh'" >> "$SHELL_CONFIG"
+        fi
         if ! grep -q "claude-project-update" "$SHELL_CONFIG"; then
             echo "alias claude-project-update='$INSTALL_DIR/scripts/update.sh'" >> "$SHELL_CONFIG"
         fi
@@ -89,13 +94,19 @@ echo ""
 echo -e "${GREEN}Installation complete!${NC}"
 echo ""
 echo "Available commands:"
-echo "  claude-project-setup     - Set up a project"
+echo "  claude-project-setup     - Set up a new project"
+echo "  claude-add               - Add to existing project"
 echo "  claude-project-update    - Update to latest version"
 echo "  claude-project-uninstall - Uninstall the tool"
 echo ""
-echo "Next steps:"
+echo -e "${YELLOW}For NEW projects:${NC}"
 echo "1. Reload your shell: source $SHELL_CONFIG"
 echo "2. Go to your project directory"
 echo "3. Run: claude-project-setup"
+echo ""
+echo -e "${YELLOW}For EXISTING projects:${NC}"
+echo "1. Reload your shell: source $SHELL_CONFIG"
+echo "2. Go to your existing project"
+echo "3. Run: claude-add"
 echo ""
 echo "For more information, visit: $REPO_URL"

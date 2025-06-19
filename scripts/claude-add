@@ -1,0 +1,16 @@
+#!/bin/bash
+# Claude Add - Add Claude Project Identifier to existing project
+
+# Find the installation directory
+if [ -d "$HOME/.claude-project-identifier" ]; then
+    INSTALL_DIR="$HOME/.claude-project-identifier"
+elif [ -d "/usr/local/claude-project-identifier" ]; then
+    INSTALL_DIR="/usr/local/claude-project-identifier"
+else
+    echo "Error: Claude Project Identifier is not installed"
+    echo "Please run the installation script first"
+    exit 1
+fi
+
+# Run the add-to-existing script
+"$INSTALL_DIR/scripts/add-to-existing.sh" "$@"

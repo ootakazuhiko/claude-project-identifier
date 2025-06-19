@@ -18,7 +18,50 @@ A project identification and context display system for Claude Code (claude.ai/c
 
 ## 🚀 Quick Start
 
-### Step 1: Install Claude Project Identifier
+### For Existing Projects (Recommended)
+
+If you have an existing repository and want to add Claude Project Identifier:
+
+```bash
+# Install the tool
+curl -sSL https://raw.githubusercontent.com/ootakazuhiko/claude-project-identifier/main/scripts/install.sh | bash
+```
+
+```bash
+# Reload your shell
+source ~/.bashrc  # or ~/.zshrc
+```
+
+```bash
+# Navigate to your existing project
+cd /path/to/your/existing/project
+```
+
+```bash
+# Add Claude Project Identifier
+claude-add
+```
+
+The `claude-add` command will:
+- Auto-detect your project type, name, and version
+- Create minimal Claude configuration files
+- Preserve your existing project structure
+- Backup any existing Claude files
+
+**Example auto-detection:**
+```
+Detected Information:
+  Project Name: my-react-app
+  Project Type: React Application
+  Description: A modern React application
+  Version: 2.1.0
+  Language: TypeScript
+  Author: John Doe
+```
+
+### For New Projects
+
+#### Step 1: Install Claude Project Identifier
 
 **One-line installation (recommended):**
 ```bash
@@ -41,14 +84,14 @@ cd claude-project-identifier
 ./scripts/setup.sh
 ```
 
-### Step 2: Set Up Your Project
+#### Step 2: Set Up Your New Project
 
 Navigate to your project directory:
 ```bash
 cd /path/to/your/project
 ```
 
-**Option 1: Interactive setup (recommended)**
+**Interactive setup:**
 ```bash
 claude-project-setup
 ```
@@ -120,6 +163,17 @@ The setup process will guide you through enabling terminal title integration.
 - **Command prompt**: `[Your Project Name] ~/path/to/project $ `
 
 The project name will automatically update when you navigate between different Claude-enabled projects!
+
+## 📦 Available Commands
+
+After installation, you have access to these commands:
+
+| Command | Description | Use Case |
+|---------|-------------|----------|
+| `claude-add` | Add Claude Project Identifier to existing project | Best for existing repos |
+| `claude-project-setup` | Full interactive setup for new projects | Best for new projects |
+| `claude-project-update` | Update to the latest version | Keep tool up-to-date |
+| `claude-project-uninstall` | Remove the tool completely | Clean uninstall |
 
 ## 📸 What It Looks Like
 
