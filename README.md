@@ -114,12 +114,36 @@ Ready to start working on My Awesome Project!
    make info  # or ./init-project.sh
    ```
 
+## 🔄 Update & Uninstall
+
+### Update to Latest Version
+
+```bash
+# Automatic update
+~/.claude-project-identifier/scripts/update.sh
+
+# Or pull latest changes
+cd ~/.claude-project-identifier && git pull
+```
+
+### Uninstall
+
+```bash
+# Complete uninstall
+~/.claude-project-identifier/scripts/uninstall.sh
+
+# Or manual removal
+rm -rf ~/.claude-project-identifier
+# Then remove PATH entries from ~/.bashrc or ~/.zshrc
+```
+
 ## 📖 Documentation
 
 - [Setup Guide](docs/setup-guide.md) - Detailed installation instructions
 - [Customization](docs/customization.md) - How to customize displays
 - [Examples](examples/) - Sample configurations for different project types
 - [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
+- [Uninstall & Update](docs/uninstall-update.md) - How to update or remove
 
 ## 🛠️ Configuration
 

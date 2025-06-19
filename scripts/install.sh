@@ -24,14 +24,31 @@ echo ""
 # Check for existing installation
 if [ -d "$INSTALL_DIR" ]; then
     echo -e "${YELLOW}Existing installation found at $INSTALL_DIR${NC}"
-    echo -n "Update existing installation? (y/n) "
+    echo ""
+    echo "Options:"
+    echo "  1) Update existing installation"
+    echo "  2) Remove and reinstall"
+    echo "  3) Cancel"
+    echo ""
+    echo -n "Choose an option (1-3): "
     read -n 1 -r
     echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "Installation cancelled."
-        exit 0
-    fi
-    cd "$INSTALL_DIR" && git pull
+    
+    case $REPLY in
+        1)
+            echo -e "${BLUE}Updating existing installation...${NC}"
+            cd "$INSTALL_DIR" && git pull origin main
+            ;;
+        2)
+            echo -e "${YELLOW}Backing up and reinstalling...${NC}"
+            mv "$INSTALL_DIR" "$INSTALL_DIR.backup.$(date +%Y%m%d_%H%M%S)"
+            git clone "$REPO_URL" "$INSTALL_DIR"
+            ;;
+        *)
+            echo "Installation cancelled."
+            exit 0
+            ;;
+    esac
 else
     echo -e "${GREEN}Installing to $INSTALL_DIR${NC}"
     git clone "$REPO_URL" "$INSTALL_DIR"
@@ -54,16 +71,31 @@ if [ -n "$SHELL_CONFIG" ]; then
         echo "# Claude Project Identifier" >> "$SHELL_CONFIG"
         echo "export PATH=\"\$PATH:$INSTALL_DIR/scripts\"" >> "$SHELL_CONFIG"
         echo "alias $SCRIPT_NAME='$INSTALL_DIR/scripts/setup.sh'" >> "$SHELL_CONFIG"
+        echo "alias claude-project-update='$INSTALL_DIR/scripts/update.sh'" >> "$SHELL_CONFIG"
+        echo "alias claude-project-uninstall='$INSTALL_DIR/scripts/uninstall.sh'" >> "$SHELL_CONFIG"
         echo -e "${GREEN}Added to $SHELL_CONFIG${NC}"
+    else
+        # Update existing aliases in case scripts were added
+        if ! grep -q "claude-project-update" "$SHELL_CONFIG"; then
+            echo "alias claude-project-update='$INSTALL_DIR/scripts/update.sh'" >> "$SHELL_CONFIG"
+        fi
+        if ! grep -q "claude-project-uninstall" "$SHELL_CONFIG"; then
+            echo "alias claude-project-uninstall='$INSTALL_DIR/scripts/uninstall.sh'" >> "$SHELL_CONFIG"
+        fi
     fi
 fi
 
 echo ""
 echo -e "${GREEN}Installation complete!${NC}"
 echo ""
+echo "Available commands:"
+echo "  claude-project-setup     - Set up a project"
+echo "  claude-project-update    - Update to latest version"
+echo "  claude-project-uninstall - Uninstall the tool"
+echo ""
 echo "Next steps:"
 echo "1. Reload your shell: source $SHELL_CONFIG"
 echo "2. Go to your project directory"
-echo "3. Run: $SCRIPT_NAME"
+echo "3. Run: claude-project-setup"
 echo ""
 echo "For more information, visit: $REPO_URL"
