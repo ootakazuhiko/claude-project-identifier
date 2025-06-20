@@ -1,6 +1,7 @@
 {
   "project": {
     "name": "[PROJECT_NAME]",
+    "ticker": "[PROJECT_TICKER]",
     "description": "[PROJECT_DESCRIPTION]",
     "version": "1.0.0",
     "type": "[PROJECT_TYPE]",

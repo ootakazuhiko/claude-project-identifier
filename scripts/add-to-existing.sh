@@ -154,9 +154,24 @@ fi
 # Get author from git
 AUTHOR_NAME=$(git config --get user.name 2>/dev/null || echo "Unknown")
 
+# Generate ticker suggestion
+if [ ${#PROJECT_NAME} -le 4 ]; then
+    SUGGESTED_TICKER="${PROJECT_NAME^^}"
+else
+    # Extract capital letters
+    ABBREV=$(echo "$PROJECT_NAME" | sed 's/[^A-Z]//g')
+    if [ ${#ABBREV} -ge 2 ] && [ ${#ABBREV} -le 4 ]; then
+        SUGGESTED_TICKER="$ABBREV"
+    else
+        SUGGESTED_TICKER="${PROJECT_NAME:0:4}"
+        SUGGESTED_TICKER="${SUGGESTED_TICKER^^}"
+    fi
+fi
+
 echo ""
 echo -e "${GREEN}Detected Information:${NC}"
 echo "  Project Name: $PROJECT_NAME"
+echo "  Ticker: $SUGGESTED_TICKER (short ID for taskbar)"
 echo "  Project Type: $PROJECT_TYPE"
 echo "  Description: $PROJECT_DESC"
 echo "  Version: $PROJECT_VERSION"
@@ -169,6 +184,9 @@ echo -e "${YELLOW}Press Enter to accept or type new value:${NC}"
 echo ""
 read -p "Project Name [$PROJECT_NAME]: " INPUT_NAME
 PROJECT_NAME=${INPUT_NAME:-$PROJECT_NAME}
+
+read -p "Ticker (4 chars) [$SUGGESTED_TICKER]: " INPUT_TICKER
+PROJECT_TICKER=${INPUT_TICKER:-$SUGGESTED_TICKER}
 
 read -p "Project Type [$PROJECT_TYPE]: " INPUT_TYPE
 PROJECT_TYPE=${INPUT_TYPE:-$PROJECT_TYPE}
@@ -235,6 +253,7 @@ cat > ".claude-project" << EOF
 {
   "project": {
     "name": "$PROJECT_NAME",
+    "ticker": "$PROJECT_TICKER",
     "description": "$PROJECT_DESC",
     "version": "$PROJECT_VERSION",
     "type": "$PROJECT_TYPE",
@@ -275,10 +294,24 @@ cp "$TEMPLATE_DIR/init-project.sh.template" "init-project.sh"
 chmod +x "init-project.sh"
 echo -e "${GREEN}✓ Created init-project.sh${NC}"
 
+# Copy compact display script
+if [ -f "$TEMPLATE_DIR/init-project-compact.sh.template" ]; then
+    cp "$TEMPLATE_DIR/init-project-compact.sh.template" "init-project-compact.sh"
+    chmod +x "init-project-compact.sh"
+    echo -e "${GREEN}✓ Created init-project-compact.sh${NC}"
+fi
+
 # Copy claude-prompt.sh
 cp "$TEMPLATE_DIR/claude-prompt.sh.template" ".claude-prompt.sh"
 chmod +x ".claude-prompt.sh"
 echo -e "${GREEN}✓ Created .claude-prompt.sh${NC}"
+
+# Copy taskbar integration
+if [ -f "$TEMPLATE_DIR/claude-taskbar.sh.template" ]; then
+    cp "$TEMPLATE_DIR/claude-taskbar.sh.template" ".claude-taskbar.sh"
+    chmod +x ".claude-taskbar.sh"
+    echo -e "${GREEN}✓ Created .claude-taskbar.sh${NC}"
+fi
 
 # Add to .gitignore if it's a git repo
 if [ "$IS_GIT_REPO" = true ] && [ -f ".gitignore" ]; then

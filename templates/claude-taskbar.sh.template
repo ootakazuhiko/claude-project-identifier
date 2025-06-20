@@ -1,0 +1,141 @@
+#!/bin/bash
+# Claude Project Taskbar Integration
+# Compact taskbar/terminal title display for project identification
+
+# State icons
+ICON_WAITING="⏳"      # Waiting for input
+ICON_RUNNING="🔄"      # Command running
+ICON_SUCCESS="✅"      # Command succeeded
+ICON_ERROR="❌"        # Command failed
+ICON_THINKING="🤔"     # Processing/thinking
+
+# Function to get project ticker (short identifier)
+get_project_ticker() {
+    if [ -f ".claude-project" ]; then
+        # Extract project info
+        PROJECT_NAME=$(grep -o '"name": "[^"]*"' .claude-project 2>/dev/null | head -1 | cut -d'"' -f4)
+        PROJECT_TYPE=$(grep -o '"type": "[^"]*"' .claude-project 2>/dev/null | head -1 | cut -d'"' -f4)
+        PROJECT_VERSION=$(grep -o '"version": "[^"]*"' .claude-project 2>/dev/null | head -1 | cut -d'"' -f4)
+        
+        # Get custom ticker if defined
+        TICKER=$(grep -o '"ticker": "[^"]*"' .claude-project 2>/dev/null | head -1 | cut -d'"' -f4)
+        
+        if [ -n "$TICKER" ]; then
+            echo "$TICKER"
+        else
+            # Generate ticker from project name (first 3-4 chars or abbreviation)
+            if [ ${#PROJECT_NAME} -le 4 ]; then
+                echo "${PROJECT_NAME^^}"  # Uppercase if short
+            else
+                # Create abbreviation from capital letters or first chars
+                ABBREV=$(echo "$PROJECT_NAME" | sed 's/[^A-Z]//g')
+                if [ ${#ABBREV} -ge 2 ] && [ ${#ABBREV} -le 4 ]; then
+                    echo "$ABBREV"
+                else
+                    # Use first 4 chars
+                    echo "${PROJECT_NAME:0:4}" | tr '[:lower:]' '[:upper:]'
+                fi
+            fi
+        fi
+    else
+        echo "NONE"
+    fi
+}
+
+# Function to get current git branch (short)
+get_git_branch_short() {
+    if command -v git >/dev/null 2>&1 && [ -d .git ]; then
+        BRANCH=$(git branch --show-current 2>/dev/null | head -c 10)
+        [ -n "$BRANCH" ] && echo "/$BRANCH" || echo ""
+    else
+        echo ""
+    fi
+}
+
+# Function to update terminal title with compact info
+update_terminal_title() {
+    local STATE_ICON="${1:-$ICON_WAITING}"
+    local TICKER=$(get_project_ticker)
+    local BRANCH=$(get_git_branch_short)
+    local TIME=$(date '+%H:%M')
+    
+    # Get additional context
+    local ENV="${CLAUDE_PROJECT_ENV:-dev}"
+    
+    # Build compact title: [Icon] TICKER/branch | env | time
+    local TITLE="${STATE_ICON} ${TICKER}${BRANCH} | ${ENV} | ${TIME}"
+    
+    # Set terminal title
+    echo -ne "\033]0;${TITLE}\007"
+    
+    # Export for use in prompts
+    export CLAUDE_TASKBAR_TITLE="$TITLE"
+    export CLAUDE_PROJECT_TICKER="$TICKER"
+    export CLAUDE_PROJECT_STATE="$STATE_ICON"
+}
+
+# Function to update state
+claude_set_state() {
+    case "$1" in
+        waiting|wait)
+            update_terminal_title "$ICON_WAITING"
+            ;;
+        running|run)
+            update_terminal_title "$ICON_RUNNING"
+            ;;
+        success|ok)
+            update_terminal_title "$ICON_SUCCESS"
+            ;;
+        error|fail)
+            update_terminal_title "$ICON_ERROR"
+            ;;
+        thinking|think)
+            update_terminal_title "$ICON_THINKING"
+            ;;
+        *)
+            update_terminal_title "$ICON_WAITING"
+            ;;
+    esac
+}
+
+# Compact prompt with state indicator
+setup_compact_prompt() {
+    local TICKER=$(get_project_ticker)
+    local STATE="${CLAUDE_PROJECT_STATE:-$ICON_WAITING}"
+    
+    if [ -n "$BASH_VERSION" ]; then
+        # Bash prompt: [STATE TICKER] $
+        export PS1="\[\033[0;36m\][${STATE} ${TICKER}]\[\033[0m\] $ "
+    elif [ -n "$ZSH_VERSION" ]; then
+        # Zsh prompt: [STATE TICKER] $
+        export PROMPT="%F{cyan}[${STATE} ${TICKER}]%f $ "
+    fi
+}
+
+# Hook for command execution tracking
+if [ -n "$BASH_VERSION" ]; then
+    # Bash: Track command execution
+    trap 'claude_set_state running' DEBUG
+    
+    # Update prompt command
+    PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND; }update_terminal_title; setup_compact_prompt"
+    
+elif [ -n "$ZSH_VERSION" ]; then
+    # Zsh: Hook for directory changes
+    autoload -U add-zsh-hook
+    add-zsh-hook chpwd update_terminal_title
+    add-zsh-hook precmd setup_compact_prompt
+    
+    # Track command execution
+    preexec() {
+        claude_set_state running
+    }
+fi
+
+# Initial setup
+update_terminal_title
+setup_compact_prompt
+
+# Export utility functions
+export -f claude_set_state
+export -f update_terminal_title

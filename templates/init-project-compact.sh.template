@@ -1,0 +1,151 @@
+#!/bin/bash
+# Claude Project Compact Display
+# Minimalist project information display
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+GRAY='\033[0;90m'
+NC='\033[0m'
+BOLD='\033[1m'
+
+# Load project config
+load_project_config() {
+    if [ -f ".claude-project" ]; then
+        PROJECT_NAME=$(grep -o '"name": "[^"]*"' .claude-project | head -1 | cut -d'"' -f4)
+        PROJECT_TICKER=$(grep -o '"ticker": "[^"]*"' .claude-project | head -1 | cut -d'"' -f4)
+        PROJECT_TYPE=$(grep -o '"type": "[^"]*"' .claude-project | head -1 | cut -d'"' -f4)
+        PROJECT_VERSION=$(grep -o '"version": "[^"]*"' .claude-project | head -1 | cut -d'"' -f4)
+        
+        # Generate ticker if not specified
+        if [ -z "$PROJECT_TICKER" ]; then
+            if [ ${#PROJECT_NAME} -le 4 ]; then
+                PROJECT_TICKER="${PROJECT_NAME^^}"
+            else
+                # Extract capital letters or use first 4 chars
+                ABBREV=$(echo "$PROJECT_NAME" | sed 's/[^A-Z]//g')
+                if [ ${#ABBREV} -ge 2 ] && [ ${#ABBREV} -le 4 ]; then
+                    PROJECT_TICKER="$ABBREV"
+                else
+                    PROJECT_TICKER="${PROJECT_NAME:0:4}" 
+                    PROJECT_TICKER="${PROJECT_TICKER^^}"
+                fi
+            fi
+        fi
+    else
+        PROJECT_NAME="Unknown"
+        PROJECT_TICKER="????"
+        PROJECT_TYPE="Unknown"
+        PROJECT_VERSION="0.0.0"
+    fi
+}
+
+# Compact display mode
+show_compact_info() {
+    # Single line status
+    echo -ne "${CYAN}⏳ ${BOLD}[$PROJECT_TICKER]${NC} "
+    echo -ne "${GRAY}$PROJECT_NAME v$PROJECT_VERSION${NC} "
+    
+    # Git branch if available
+    if command -v git >/dev/null 2>&1 && [ -d .git ]; then
+        BRANCH=$(git branch --show-current 2>/dev/null)
+        [ -n "$BRANCH" ] && echo -ne "${GREEN}($BRANCH)${NC} "
+    fi
+    
+    # Environment
+    ENV="${CLAUDE_PROJECT_ENV:-dev}"
+    echo -ne "${YELLOW}[$ENV]${NC} "
+    
+    # Time
+    echo -e "${GRAY}$(date '+%H:%M')${NC}"
+    
+    # Quick status line
+    echo -ne "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo ""
+}
+
+# Standard display mode (but more compact)
+show_standard_info() {
+    clear
+    
+    # Compact header with ticker
+    echo -e "${CYAN}${BOLD}⏳ [$PROJECT_TICKER] $PROJECT_NAME${NC} ${GRAY}v$PROJECT_VERSION${NC}"
+    echo -e "${GRAY}────────────────────────────────────────${NC}"
+    
+    # Essential info only
+    echo -ne "${GREEN}Type:${NC} $PROJECT_TYPE  "
+    
+    # Git info
+    if command -v git >/dev/null 2>&1 && [ -d .git ]; then
+        BRANCH=$(git branch --show-current 2>/dev/null)
+        COMMITS=$(git rev-list --count HEAD 2>/dev/null || echo "0")
+        echo -ne "${GREEN}Git:${NC} $BRANCH ($COMMITS commits)  "
+    fi
+    
+    # Environment
+    ENV="${CLAUDE_PROJECT_ENV:-dev}"
+    echo -e "${GREEN}Env:${NC} $ENV"
+    
+    # Quick commands (one line)
+    echo -ne "${YELLOW}Cmds:${NC} "
+    if [ -f "package.json" ]; then
+        echo -ne "npm {start|test|build}  "
+    fi
+    if [ -f "Makefile" ]; then
+        echo -ne "make {info|help}  "
+    fi
+    echo ""
+    
+    echo -e "${GRAY}────────────────────────────────────────${NC}"
+    echo -e "${CYAN}Ready >${NC} "
+}
+
+# Ultra-compact mode (single line)
+show_oneline_info() {
+    echo -e "${CYAN}⏳[$PROJECT_TICKER]${NC} ${GRAY}$PROJECT_NAME v$PROJECT_VERSION${NC} $(date '+%H:%M') ${GREEN}>${NC}"
+}
+
+# Source taskbar integration if available
+if [ -f ".claude-taskbar.sh" ]; then
+    source .claude-taskbar.sh
+fi
+
+# Main
+main() {
+    load_project_config
+    
+    case "${1:-}" in
+        "--compact"|"-c")
+            show_compact_info
+            ;;
+        "--oneline"|"-o")
+            show_oneline_info
+            ;;
+        "--ticker"|"-t")
+            echo "$PROJECT_TICKER"
+            ;;
+        "--update-title"|"-u")
+            # Update terminal title only
+            if command -v update_terminal_title >/dev/null 2>&1; then
+                update_terminal_title
+            else
+                echo -ne "\033]0;⏳ [$PROJECT_TICKER] $PROJECT_NAME\007"
+            fi
+            ;;
+        *)
+            show_standard_info
+            ;;
+    esac
+}
+
+# Check for Claude project
+if [ -f "CLAUDE.md" ] || [ -f ".claude-project" ]; then
+    main "$@"
+else
+    echo -e "${RED}❌ Not in a Claude-enabled project${NC}"
+    exit 1
+fi
